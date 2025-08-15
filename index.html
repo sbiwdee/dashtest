@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simple Exchange TV Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Логотип -->
+    <header class="logo">
+      <img src="logo.svg" alt="Simple Exchange" />
+    </header>
+    
+    <!-- Время -->
+    <section class="time" aria-label="Мировое время">
+      <div class="time-item" id="moscow-container">
+        Москва: <span id="moscow" aria-label="Время в Москве">--:--</span>
+      </div>
+      <div class="time-item">
+        Дубай: <span id="dubai" aria-label="Время в Дубае">--:--</span>
+      </div>
+      <div class="time-item">
+        Бангкок: <span id="bangkok" aria-label="Время в Бангкоке">--:--</span>
+      </div>
+      <div class="time-item">
+        Лондон: <span id="london" aria-label="Время в Лондоне">--:--</span>
+      </div>
+      <div class="time-item">
+        Нью-Йорк: <span id="ny" aria-label="Время в Нью-Йорке">--:--</span>
+      </div>
+    </section>
+    
+    <!-- Курсы -->
+    <main class="rates" aria-label="Курсы валют и активов">
+      <div class="rate-card">
+        <div class="coin">BTC/USDT</div>
+        <div class="value-wrapper">
+          <span class="value" id="btc" aria-live="polite">--</span>
+          <span class="trend-indicator" id="trend-btc" aria-hidden="true"></span>
+        </div>
+      </div>
+      <div class="rate-card">
+        <div class="coin">ETH/USDT</div>
+        <div class="value-wrapper">
+          <span class="value" id="eth" aria-live="polite">--</span>
+          <span class="trend-indicator" id="trend-eth" aria-hidden="true"></span>
+        </div>
+      </div>
+      <div class="rate-card">
+        <div class="coin">Золото</div>
+        <div class="value-wrapper">
+          <span class="value" id="gold" aria-live="polite">--</span>
+          <span class="trend-indicator" id="trend-gold" aria-hidden="true"></span>
+        </div>
+      </div>
+      <div class="rate-card">
+        <div class="coin">Нефть</div>
+        <div class="value-wrapper">
+          <span class="value" id="oil" aria-live="polite">--</span>
+          <span class="trend-indicator" id="trend-oil" aria-hidden="true"></span>
+        </div>
+      </div>
+      <div class="rate-card">
+        <div class="coin">USD/RUB ЦБ</div>
+        <div class="value-wrapper">
+          <span class="value" id="usd-cbr" aria-live="polite">--</span>
+          <span class="trend-indicator" id="trend-usd-cbr" aria-hidden="true"></span>
+        </div>
+      </div>
+      <div class="rate-card">
+        <div class="coin">USD/RUB Межбанк</div>
+        <div class="value-wrapper">
+          <span class="value" id="usd-mb" aria-live="polite">--</span>
+          <span class="trend-indicator" id="trend-usd-mb" aria-hidden="true"></span>
+        </div>
+      </div>
+    </main>
+    
+    <!-- Бегущая строка -->
+    <footer class="ticker-container">
+      <div class="ticker" id="ticker" aria-live="polite">Загрузка...</div>
+    </footer>
+  </div>
+  
+  <!-- Фоновая музыка (автоматическая) -->
+  <audio id="bg-music" loop autoplay>
+    <source src="music.mp3" type="audio/mpeg">
+    Ваш браузер не поддерживает аудио элемент.
+  </audio>
+  
+  <script src="script.js"></script>
+</body>
+</html>
