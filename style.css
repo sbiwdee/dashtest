@@ -1,0 +1,231 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #121212;
+  --text: #ffffff;
+  --accent: #00C853;
+  --card-bg: #1e1e1e;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --card-min-height: 220px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  font-size: 28px; /* Увеличен для телевизора */
+  overflow: hidden;
+  height: 100vh;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.container {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  height: 100vh;
+  padding: 40px 30px;
+  gap: 25px;
+  position: relative;
+}
+
+/* Логотип */
+.logo img {
+  height: 80px; /* Увеличен для телевизора */
+  filter: brightness(1.1);
+  transition: filter 0.3s ease;
+}
+
+/* Время */
+.time {
+  display: flex;
+  justify-content: space-around;
+  font-size: 42px; /* Увеличен для телевизора */
+  font-weight: 500;
+  flex-wrap: wrap;
+}
+
+.time-item {
+  text-align: center;
+  padding: 18px 24px; /* Увеличены отступы */
+  background: var(--card-bg);
+  border-radius: 12px;
+  min-width: 180px; /* Увеличена ширина */
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+}
+
+#moscow-container {
+  background: var(--accent) !important;
+  color: white !important;
+  font-weight: 700;
+  box-shadow: 0 0 15px rgba(0, 200, 83, 0.4);
+}
+
+/* Курсы */
+.rates {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Увеличена минимальная ширина */
+  gap: 30px; /* Увеличен отступ */
+  margin-top: 20px;
+}
+
+.rate-card {
+  position: relative;
+  background: var(--card-bg);
+  padding: 40px 25px; /* Увеличены отступы */
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: var(--card-min-height);
+}
+
+.coin {
+  font-size: 42px; /* Увеличен для телевизора */
+  font-weight: 600;
+  color: #ccc;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  align-self: center;
+  text-align: center;
+  transition: color 0.3s ease;
+}
+
+.value {
+  font-size: 68px; /* Увеличен для телевизора */
+  font-weight: bold;
+  color: var(--text);
+  transition: color 0.3s ease;
+}
+
+/* Индикаторы изменения цен */
+.value-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px; /* Увеличен отступ */
+  justify-content: center;
+  width: 100%;
+}
+
+.trend-indicator {
+  font-size: 56px; /* Увеличен для телевизора */
+  font-weight: bold;
+  transition: all 0.4s ease, transform 0.2s ease;
+}
+
+.trend-up {
+  color: #00C853;
+}
+
+.trend-down {
+  color: #d32f2f;
+}
+
+/* Бегущая строка */
+.ticker-container {
+  background: var(--card-bg);
+  padding: 20px 0;
+  border-top: 2px solid var(--accent);
+  font-size: 36px; /* Увеличен для телевизора */
+  overflow: hidden;
+  height: 80px; /* Увеличена высота */
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.ticker {
+  white-space: nowrap;
+  animation: ticker-scroll 25s linear infinite;
+  color: var(--accent);
+  font-weight: 500;
+  padding-left: 100%;
+  transition: opacity 0.5s ease;
+}
+
+@keyframes ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-200%); }
+}
+
+/* Адаптация под TV */
+@media (max-height: 1080px) {
+  .value { font-size: 56px; }
+  .coin { font-size: 36px; }
+  .ticker { font-size: 30px; }
+  .time { font-size: 36px; }
+  .rate-card { min-height: 200px; }
+}
+
+@media (min-width: 1920px) {
+  .value { font-size: 80px; }
+  .coin { font-size: 48px; }
+  .rate-card { min-height: 280px; }
+  .time { font-size: 48px; }
+  .ticker { font-size: 42px; }
+}
+
+/* Адаптивность для узких экранов */
+@media (max-width: 1200px) {
+  .rates {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 20px 15px;
+    gap: 15px;
+  }
+  
+  .time {
+    font-size: 28px;
+    flex-wrap: wrap;
+  }
+  
+  .time-item {
+    min-width: 140px;
+    padding: 12px;
+  }
+  
+  .rates {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .rate-card {
+    min-height: 160px;
+    padding: 20px 15px;
+  }
+  
+  .coin {
+    font-size: 32px;
+    margin-bottom: 10px;
+  }
+  
+  .value {
+    font-size: 48px;
+  }
+  
+  .ticker-container {
+    height: 60px;
+    font-size: 28px;
+  }
+}
+
+/* Оптимизация для пользователей с ограниченными возможностями */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
