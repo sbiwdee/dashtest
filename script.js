@@ -1,10 +1,10 @@
 // Конфигурация приложения
 const CONFIG = {
-  updateInterval: 300000, // 5 минут
+  updateInterval: 100000, // 5 минут
   tickerUpdateInterval: 8000, // 8 секунд
   timeUpdateInterval: 1000, // 1 секунда
   retryAttempts: 3,
-  musicVolume: 0.15, // Немного увеличена громкость для зала ожидания
+  musicVolume: 0.15,
   fallbackValues: {
     btc: '67,500',
     eth: '3,450',
@@ -12,7 +12,9 @@ const CONFIG = {
     oil: '87.50',
     'usd-cbr': '92.10',
     'usd-mb': '92.35'
-  }
+  },
+  chartPoints: 20, // Количество точек на графике
+  chartUpdateInterval: 60000 // Обновление графиков каждую минуту
 };
 
 // API URLs
@@ -51,14 +53,6 @@ const elements = {
     'usd-cbr': document.getElementById('usd-cbr'),
     'usd-mb': document.getElementById('usd-mb')
   },
-  trends: {
-    btc: document.getElementById('trend-btc'),
-    eth: document.getElementById('trend-eth'),
-    gold: document.getElementById('trend-gold'),
-    oil: document.getElementById('trend-oil'),
-    'usd-cbr': document.getElementById('trend-usd-cbr'),
-    'usd-mb': document.getElementById('trend-usd-mb')
-  },
   ticker: document.getElementById('ticker'),
   music: document.getElementById('bg-music')
 };
@@ -74,7 +68,16 @@ const state = {
     'usd-cbr': null,
     'usd-mb': null
   },
-  isMusicPlaying: false
+  isMusicPlaying: false,
+  charts: {},
+  chartData: {
+    btc: [],
+    eth: [],
+    gold: [],
+    oil: [],
+    'usd-cbr': [],
+    'usd-mb': []
+  }
 };
 
 // Улучшенная функция fetch с повторными попытками
@@ -102,41 +105,129 @@ function formatNumber(num) {
   return new Intl.NumberFormat('en-US').format(num);
 }
 
-// Функция обновления с индикатором (↑ или ↓)
-function updateValueWithTrend(id, newValue) {
+// Функция обновления значения
+function updateValue(id, newValue) {
   const valueElement = elements.rates[id];
-  const trendElement = elements.trends[id];
-  const prev = state.prevValues[id];
   
-  if (!valueElement || !trendElement) {
-    console.error("Элементы не найдены:", id);
+  if (!valueElement) {
+    console.error("Элемент не найден:", id);
     return;
   }
   
   valueElement.textContent = newValue;
   
-  if (prev === null) {
-    const randomDirection = Math.random() > 0.5 ? 'up' : 'down';
-    trendElement.textContent = randomDirection === 'up' ? '↑' : '↓';
-    trendElement.className = `trend-indicator trend-${randomDirection}`;
-  } else {
-    const current = parseFloat(newValue.replace(/,/g, ''));
-    const previous = parseFloat(prev.replace(/,/g, ''));
-    
-    if (current > previous) {
-      trendElement.textContent = '↑';
-      trendElement.className = 'trend-indicator trend-up';
-    } else if (current < previous) {
-      trendElement.textContent = '↓';
-      trendElement.className = 'trend-indicator trend-down';
-    } else {
-      const randomDirection = Math.random() > 0.5 ? 'up' : 'down';
-      trendElement.textContent = randomDirection === 'up' ? '↑' : '↓';
-      trendElement.className = `trend-indicator trend-${randomDirection}`;
-    }
+  // Сохраняем предыдущее значение для сравнения
+  state.prevValues[id] = newValue;
+  
+  // Обновляем данные для графика
+  const numericValue = parseFloat(newValue.replace(/,/g, ''));
+  updateChartData(id, numericValue);
+}
+
+// Обновление данных для графика
+function updateChartData(id, value) {
+  if (!state.chartData[id]) {
+    state.chartData[id] = [];
   }
   
-  state.prevValues[id] = newValue;
+  // Добавляем новое значение
+  state.chartData[id].push({
+    time: new Date(),
+    value: value
+  });
+  
+  // Ограничиваем количество точек
+  if (state.chartData[id].length > CONFIG.chartPoints) {
+    state.chartData[id].shift();
+  }
+  
+  // Обновляем график
+  updateChart(id);
+}
+
+// Создание графика
+function createChart(id) {
+  const ctx = document.getElementById(`chart-${id}`).getContext('2d');
+  
+  state.charts[id] = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: Array(CONFIG.chartPoints).fill(''),
+      datasets: [{
+        data: [],
+        borderColor: getChartColor(id),
+        borderWidth: 3,
+        pointRadius: 0,
+        pointHoverRadius: 0,
+        fill: false,
+        tension: 0.4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          enabled: false
+        }
+      },
+      scales: {
+        x: {
+          display: false
+        },
+        y: {
+          display: false
+        }
+      },
+      elements: {
+        line: {
+          borderJoinStyle: 'round'
+        }
+      },
+      animation: {
+        duration: 0
+      }
+    }
+  });
+}
+
+// Обновление графика
+function updateChart(id) {
+  if (!state.charts[id]) {
+    createChart(id);
+  }
+  
+  const chart = state.charts[id];
+  const data = state.chartData[id] || [];
+  
+  // Обновляем данные графика
+  chart.data.datasets[0].data = data.map(point => point.value);
+  
+  // Обновляем цвет линии в зависимости от тренда
+  if (data.length > 1) {
+    const lastValue = data[data.length - 1].value;
+    const prevValue = data[data.length - 2].value;
+    chart.data.datasets[0].borderColor = lastValue >= prevValue ? '#00C853' : '#d32f2f';
+  }
+  
+  chart.update('none'); // Обновляем без анимации для производительности
+}
+
+// Получение цвета для графика
+function getChartColor(id) {
+  const colors = {
+    btc: '#F7931A',
+    eth: '#627EEA',
+    gold: '#FFD700',
+    oil: '#333333',
+    'usd-cbr': '#1E88E5',
+    'usd-mb': '#43A047'
+  };
+  
+  return colors[id] || '#00C853';
 }
 
 // Оптимизация обновления времени
@@ -163,20 +254,20 @@ async function fetchAllRates() {
 
     // Обработка криптовалют
     if (cryptoData.status === 'fulfilled') {
-      updateValueWithTrend('btc', formatNumber(cryptoData.value.bitcoin.usd));
-      updateValueWithTrend('eth', formatNumber(cryptoData.value.ethereum.usd));
+      updateValue('btc', formatNumber(cryptoData.value.bitcoin.usd));
+      updateValue('eth', formatNumber(cryptoData.value.ethereum.usd));
     } else {
       handleError(cryptoData.reason, 'криптовалютах');
-      updateValueWithTrend('btc', CONFIG.fallbackValues.btc);
-      updateValueWithTrend('eth', CONFIG.fallbackValues.eth);
+      updateValue('btc', CONFIG.fallbackValues.btc);
+      updateValue('eth', CONFIG.fallbackValues.eth);
     }
     
     // Обработка золота
     if (goldData.status === 'fulfilled' && goldData.value.price) {
-      updateValueWithTrend('gold', goldData.value.price.toFixed(2));
+      updateValue('gold', goldData.value.price.toFixed(2));
     } else {
       handleError(goldData.reason, 'золоте');
-      updateValueWithTrend('gold', CONFIG.fallbackValues.gold);
+      updateValue('gold', CONFIG.fallbackValues.gold);
     }
     
     // Обработка нефти
@@ -202,14 +293,14 @@ async function fetchAllRates() {
           throw new Error(`Не удалось преобразовать "${latestData.value}" в число`);
         }
         
-        updateValueWithTrend('oil', numericPrice.toFixed(2));
+        updateValue('oil', numericPrice.toFixed(2));
       } catch (e) {
         handleError(e, 'нефти');
-        updateValueWithTrend('oil', CONFIG.fallbackValues.oil);
+        updateValue('oil', CONFIG.fallbackValues.oil);
       }
     } else {
       handleError(oilData.reason, 'нефти');
-      updateValueWithTrend('oil', CONFIG.fallbackValues.oil);
+      updateValue('oil', CONFIG.fallbackValues.oil);
     }
     
     // Обработка USD/RUB
@@ -217,26 +308,39 @@ async function fetchAllRates() {
       try {
         const usdRub = rubData.value;
         const cbr = usdRub.Valute.USD.Value;
-        updateValueWithTrend('usd-cbr', cbr.toFixed(2));
-        updateValueWithTrend('usd-mb', (cbr + 0.25).toFixed(2));
+        updateValue('usd-cbr', cbr.toFixed(2));
+        updateValue('usd-mb', (cbr + 0.25).toFixed(2));
       } catch (e) {
         handleError(e, 'USD/RUB');
-        updateValueWithTrend('usd-cbr', CONFIG.fallbackValues['usd-cbr']);
-        updateValueWithTrend('usd-mb', CONFIG.fallbackValues['usd-mb']);
+        updateValue('usd-cbr', CONFIG.fallbackValues['usd-cbr']);
+        updateValue('usd-mb', CONFIG.fallbackValues['usd-mb']);
       }
     } else {
       handleError(rubData.reason, 'USD/RUB');
-      updateValueWithTrend('usd-cbr', CONFIG.fallbackValues['usd-cbr']);
-      updateValueWithTrend('usd-mb', CONFIG.fallbackValues['usd-mb']);
+      updateValue('usd-cbr', CONFIG.fallbackValues['usd-cbr']);
+      updateValue('usd-mb', CONFIG.fallbackValues['usd-mb']);
     }
     
   } catch (error) {
     handleError(error, 'загрузке курсов');
     // Применяем все значения по умолчанию в случае общей ошибки
     Object.entries(CONFIG.fallbackValues).forEach(([key, value]) => {
-      updateValueWithTrend(key, value);
+      updateValue(key, value);
     });
   }
+}
+
+// Симуляция обновления графиков (для демонстрации)
+function simulateChartUpdates() {
+  Object.keys(state.chartData).forEach(id => {
+    if (state.chartData[id].length > 0) {
+      const lastValue = state.chartData[id][state.chartData[id].length - 1].value;
+      // Генерируем случайное изменение в пределах ±1%
+      const change = (Math.random() - 0.5) * 0.02;
+      const newValue = lastValue * (1 + change);
+      updateChartData(id, newValue);
+    }
+  });
 }
 
 // Плавное обновление бегущей строки
@@ -301,8 +405,22 @@ function setupAutoRefresh() {
   }, refreshInterval);
 }
 
+// Инициализация графиков
+function initCharts() {
+  // Создаем графики для всех валют
+  Object.keys(state.chartData).forEach(id => {
+    createChart(id);
+  });
+  
+  // Запускаем симуляцию обновления графиков
+  setInterval(simulateChartUpdates, CONFIG.chartUpdateInterval);
+}
+
 // Инициализация приложения
 function initApp() {
+  // Инициализируем графики
+  initCharts();
+  
   // Запуск обновлений
   fetchAllRates();
   setInterval(fetchAllRates, CONFIG.updateInterval);
