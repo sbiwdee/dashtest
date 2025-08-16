@@ -12,6 +12,8 @@
   --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   --card-height: 320px;
   --chart-height: 100px;
+  --time-item-width: 180px;
+  --time-item-height: 100px;
 }
 
 body {
@@ -27,13 +29,21 @@ body {
   display: grid;
   grid-template-rows: auto auto 1fr auto;
   height: 100vh;
-  padding: 40px 30px;
-  gap: 25px;
+  padding: 30px;
+  gap: 20px;
+  max-width: 100%;
+  margin: 0 auto;
 }
 
 /* Логотип */
+.logo {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+}
+
 .logo img {
-  height: 80px;
+  height: 70px;
   filter: brightness(1.1);
 }
 
@@ -41,8 +51,9 @@ body {
 .time {
   display: flex;
   justify-content: space-between;
-  font-size: 42px;
-  font-weight: 500;
+  gap: 15px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .time-item {
@@ -50,25 +61,26 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 18px 24px;
   background: var(--card-bg);
   border-radius: 12px;
-  min-width: 180px;
+  width: var(--time-item-width);
+  height: var(--time-item-height);
   box-shadow: var(--shadow);
-  flex: 1;
   text-align: center;
+  flex-shrink: 0; /* Запрещаем сжиматься */
 }
 
 .city {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 500;
   color: #aaa;
   margin-bottom: 5px;
 }
 
 .time-value {
-  font-size: 36px;
+  font-size: 32px;
   font-weight: 700;
+  color: var(--text);
 }
 
 #moscow-container {
@@ -85,14 +97,15 @@ body {
 /* Курсы */
 .rates {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 30px;
-  margin-top: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .rate-card {
   background: var(--card-bg);
-  padding: 25px;
+  padding: 20px;
   border-radius: 16px;
   text-align: center;
   box-shadow: var(--shadow);
@@ -100,10 +113,15 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  transition: transform 0.3s ease;
+}
+
+.rate-card:hover {
+  transform: translateY(-5px);
 }
 
 .coin {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 600;
   color: #ccc;
   margin-bottom: 10px;
@@ -116,11 +134,11 @@ body {
 }
 
 .value {
-  font-size: 56px;
+  font-size: 48px;
   font-weight: bold;
   color: var(--text);
   margin-bottom: 15px;
-  height: 70px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -142,12 +160,13 @@ body {
 /* Бегущая строка */
 .ticker-container {
   background: var(--card-bg);
-  padding: 20px 0;
+  padding: 15px 0;
   border-top: 2px solid var(--accent);
-  font-size: 36px;
+  font-size: 32px;
   overflow: hidden;
-  height: 80px;
+  height: 70px;
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
+  width: 100%;
 }
 
 .ticker {
@@ -163,86 +182,92 @@ body {
   100% { transform: translateX(-200%); }
 }
 
-/* Адаптация под TV */
-@media (max-height: 1080px) {
+/* Адаптация под разные размеры экранов */
+@media (max-width: 1400px) {
   :root {
-    --card-height: 280px;
+    --time-item-width: 160px;
+    --time-item-height: 90px;
+    --card-height: 300px;
     --chart-height: 90px;
   }
-  .value { font-size: 48px; }
-  .coin { font-size: 28px; }
-  .ticker { font-size: 30px; }
-  .time { font-size: 36px; }
   .city { font-size: 20px; }
-  .time-value { font-size: 30px; }
+  .time-value { font-size: 28px; }
+  .coin { font-size: 26px; }
+  .value { font-size: 44px; }
+  .ticker { font-size: 28px; }
 }
 
-@media (min-width: 1920px) {
-  :root {
-    --card-height: 360px;
-    --chart-height: 120px;
-  }
-  .value { font-size: 64px; }
-  .coin { font-size: 36px; }
-  .time { font-size: 48px; }
-  .city { font-size: 24px; }
-  .time-value { font-size: 40px; }
-  .ticker { font-size: 42px; }
-}
-
-/* Адаптивность для узких экранов */
 @media (max-width: 1200px) {
-  .rates {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  :root {
+    --time-item-width: 140px;
+    --time-item-height: 80px;
+    --card-height: 280px;
+    --chart-height: 80px;
   }
+  .container { padding: 20px; }
+  .city { font-size: 18px; }
+  .time-value { font-size: 24px; }
+  .coin { font-size: 24px; }
+  .value { font-size: 40px; }
+  .ticker { font-size: 26px; }
+  .rates { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+}
+
+@media (max-width: 992px) {
+  :root {
+    --time-item-width: 120px;
+    --time-item-height: 70px;
+    --card-height: 260px;
+    --chart-height: 70px;
+  }
+  .city { font-size: 16px; }
+  .time-value { font-size: 20px; }
+  .coin { font-size: 22px; }
+  .value { font-size: 36px; }
+  .ticker { font-size: 24px; }
+  .rates { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
 }
 
 @media (max-width: 768px) {
-  .container {
-    padding: 20px 15px;
-    gap: 15px;
-  }
-  
-  .time {
-    font-size: 28px;
-    flex-wrap: wrap;
-  }
-  
-  .time-item {
-    min-width: 140px;
-    padding: 12px;
-  }
-  
-  .rates {
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
-  
   :root {
+    --time-item-width: 100px;
+    --time-item-height: 60px;
     --card-height: 240px;
-    --chart-height: 80px;
+    --chart-height: 60px;
   }
-  
-  .coin {
-    font-size: 24px;
-    margin-bottom: 5px;
+  .container { padding: 15px; gap: 15px; }
+  .time { flex-wrap: wrap; justify-content: center; }
+  .city { font-size: 14px; }
+  .time-value { font-size: 18px; }
+  .coin { font-size: 20px; }
+  .value { font-size: 32px; }
+  .ticker-container { height: 60px; }
+  .ticker { font-size: 20px; }
+  .rates { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --time-item-width: 90px;
+    --time-item-height: 50px;
+    --card-height: 220px;
+    --chart-height: 50px;
   }
-  
-  .value {
-    font-size: 40px;
-    margin-bottom: 10px;
-  }
-  
-  .ticker-container {
-    height: 60px;
-    font-size: 28px;
-  }
-  
-  .city {
-    font-size: 18px;
-  }
-  
-  .time-value {
-    font-size: 24px;
+  .container { padding: 10px; gap: 10px; }
+  .logo img { height: 50px; }
+  .city { font-size: 12px; }
+  .time-value { font-size: 16px; }
+  .coin { font-size: 18px; }
+  .value { font-size: 28px; }
+  .ticker-container { height: 50px; }
+  .ticker { font-size: 18px; }
+}
+
+/* Оптимизация для пользователей с ограниченными возможностями */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
