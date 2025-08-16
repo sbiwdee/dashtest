@@ -12,8 +12,9 @@
   --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   --card-height: 320px;
   --chart-height: 100px;
-  --time-item-width: 200px; /* Увеличена ширина ячеек времени */
+  --time-item-width: 200px;
   --time-item-height: 100px;
+  --gap-size: 20px; /* Единый размер отступов */
 }
 
 body {
@@ -30,7 +31,7 @@ body {
   grid-template-rows: auto 1fr auto;
   height: 100vh;
   padding: 30px;
-  gap: 20px;
+  gap: var(--gap-size); /* Единый отступ между секциями */
   max-width: 100%;
   margin: 0 auto;
 }
@@ -39,20 +40,21 @@ body {
 .header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   width: 100%;
-  margin-bottom: 10px;
+  gap: var(--gap-size); /* Единый отступ между логотипом и временем */
 }
 
 /* Логотип */
 .logo {
   display: flex;
   align-items: center;
+  justify-content: center;
   padding: 10px 20px;
   background: var(--card-bg);
   border-radius: 12px;
   box-shadow: var(--shadow);
   height: var(--time-item-height);
+  flex-shrink: 0; /* Запрещаем сжиматься */
 }
 
 .logo img {
@@ -63,12 +65,10 @@ body {
 /* Время */
 .time {
   display: flex;
-  justify-content: flex-end; /* Выравниваем ячейки времени по правому краю */
-  gap: 15px;
-  width: 100%;
-  margin-left: 20px; /* Отступ от логотипа */
+  gap: var(--gap-size); /* Единый отступ между ячейками времени */
   overflow-x: auto; /* Добавляем горизонтальную прокрутку для маленьких экранов */
   padding-bottom: 5px; /* Место для полосы прокрутки */
+  flex-grow: 1; /* Занимаем все оставшееся пространство */
 }
 
 .time::-webkit-scrollbar {
@@ -132,7 +132,7 @@ body {
 .rates {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* Фиксированная сетка 3 колонки */
-  gap: 20px;
+  gap: var(--gap-size); /* Единый отступ между карточками */
   width: 100%;
   margin: 0 auto;
 }
@@ -224,6 +224,7 @@ body {
     --time-item-height: 90px;
     --card-height: 300px;
     --chart-height: 90px;
+    --gap-size: 18px;
   }
   .city { font-size: 20px; }
   .time-value { font-size: 28px; }
@@ -239,6 +240,7 @@ body {
     --time-item-height: 80px;
     --card-height: 280px;
     --chart-height: 80px;
+    --gap-size: 16px;
   }
   .container { padding: 20px; }
   .city { font-size: 18px; }
@@ -256,6 +258,7 @@ body {
     --time-item-height: 70px;
     --card-height: 260px;
     --chart-height: 70px;
+    --gap-size: 14px;
   }
   .city { font-size: 16px; }
   .time-value { font-size: 20px; }
@@ -272,11 +275,12 @@ body {
     --time-item-height: 60px;
     --card-height: 240px;
     --chart-height: 60px;
+    --gap-size: 12px;
   }
-  .container { padding: 15px; gap: 15px; }
-  .header { flex-direction: column; align-items: flex-start; }
-  .logo { margin-bottom: 10px; width: 100%; justify-content: center; }
-  .time { margin-left: 0; justify-content: center; }
+  .container { padding: 15px; }
+  .header { flex-direction: column; align-items: stretch; }
+  .logo { margin-bottom: var(--gap-size); width: 100%; }
+  .time { justify-content: center; }
   .city { font-size: 14px; }
   .time-value { font-size: 18px; }
   .coin { font-size: 20px; }
@@ -293,8 +297,9 @@ body {
     --time-item-height: 50px;
     --card-height: 220px;
     --chart-height: 50px;
+    --gap-size: 10px;
   }
-  .container { padding: 10px; gap: 10px; }
+  .container { padding: 10px; }
   .city { font-size: 12px; }
   .time-value { font-size: 16px; }
   .coin { font-size: 18px; }
