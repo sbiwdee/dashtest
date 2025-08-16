@@ -12,7 +12,7 @@
   --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   --card-height: 320px;
   --chart-height: 100px;
-  --time-item-width: 200px;
+  --time-item-width: 220px; /* Увеличена ширина ячеек времени */
   --time-item-height: 100px;
   --gap-size: 20px; /* Единый размер отступов */
 }
@@ -30,8 +30,8 @@ body {
   display: grid;
   grid-template-rows: auto 1fr auto;
   height: 100vh;
-  padding: var(--gap-size); /* Единый отступ для контейнера */
-  gap: var(--gap-size); /* Единый отступ между секциями */
+  padding: var(--gap-size);
+  gap: var(--gap-size);
   max-width: 100%;
   margin: 0 auto;
 }
@@ -41,7 +41,7 @@ body {
   display: flex;
   align-items: center;
   width: 100%;
-  gap: var(--gap-size); /* Единый отступ между логотипом и временем */
+  gap: var(--gap-size);
 }
 
 /* Логотип */
@@ -54,7 +54,8 @@ body {
   border-radius: 12px;
   box-shadow: var(--shadow);
   height: var(--time-item-height);
-  flex-shrink: 0; /* Запрещаем сжиматься */
+  flex-shrink: 0;
+  margin-left: var(--gap-size); /* Добавляем отступ слева для выделения */
 }
 
 .logo img {
@@ -65,11 +66,12 @@ body {
 /* Время */
 .time {
   display: flex;
-  gap: var(--gap-size); /* Единый отступ между ячейками времени */
-  overflow-x: auto; /* Добавляем горизонтальную прокрутку для маленьких экранов */
-  padding-bottom: 5px; /* Место для полосы прокрутки */
-  flex-grow: 1; /* Занимаем все оставшееся пространство */
-  min-width: 0; /* Предотвращаем переполнение */
+  gap: var(--gap-size);
+  overflow-x: auto;
+  padding-bottom: 5px;
+  flex-grow: 1;
+  min-width: 0;
+  justify-content: flex-start; /* Выравниваем по левому краю */
 }
 
 .time::-webkit-scrollbar {
@@ -97,7 +99,7 @@ body {
   height: var(--time-item-height);
   box-shadow: var(--shadow);
   text-align: center;
-  flex-shrink: 0; /* Запрещаем сжиматься */
+  flex-shrink: 0;
   transition: transform 0.3s ease;
 }
 
@@ -132,8 +134,8 @@ body {
 /* Курсы */
 .rates {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Фиксированная сетка 3 колонки */
-  gap: var(--gap-size); /* Единый отступ между карточками */
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gap-size);
   width: 100%;
   margin: 0 auto;
 }
@@ -221,7 +223,7 @@ body {
 /* Адаптация под разные размеры экранов */
 @media (max-width: 1400px) {
   :root {
-    --time-item-width: 180px;
+    --time-item-width: 200px;
     --time-item-height: 90px;
     --card-height: 300px;
     --chart-height: 90px;
@@ -237,7 +239,7 @@ body {
 
 @media (max-width: 1200px) {
   :root {
-    --time-item-width: 160px;
+    --time-item-width: 180px;
     --time-item-height: 80px;
     --card-height: 280px;
     --chart-height: 80px;
@@ -255,7 +257,7 @@ body {
 
 @media (max-width: 992px) {
   :root {
-    --time-item-width: 140px;
+    --time-item-width: 160px;
     --time-item-height: 70px;
     --card-height: 260px;
     --chart-height: 70px;
@@ -272,7 +274,7 @@ body {
 
 @media (max-width: 768px) {
   :root {
-    --time-item-width: 120px;
+    --time-item-width: 140px;
     --time-item-height: 60px;
     --card-height: 240px;
     --chart-height: 60px;
@@ -280,7 +282,7 @@ body {
   }
   .container { padding: var(--gap-size); }
   .header { flex-direction: column; align-items: stretch; }
-  .logo { margin-bottom: var(--gap-size); width: 100%; }
+  .logo { margin-left: 0; margin-bottom: var(--gap-size); width: 100%; }
   .time { justify-content: center; }
   .city { font-size: 14px; }
   .time-value { font-size: 18px; }
@@ -288,13 +290,13 @@ body {
   .value { font-size: 32px; }
   .ticker-container { height: 60px; }
   .ticker { font-size: 20px; }
-  .rates { grid-template-columns: repeat(2, 1fr); } /* 2 колонки на планшетах */
+  .rates { grid-template-columns: repeat(2, 1fr); }
   .logo img { height: 35px; }
 }
 
 @media (max-width: 480px) {
   :root {
-    --time-item-width: 100px;
+    --time-item-width: 120px;
     --time-item-height: 50px;
     --card-height: 220px;
     --chart-height: 50px;
@@ -307,7 +309,7 @@ body {
   .value { font-size: 28px; }
   .ticker-container { height: 50px; }
   .ticker { font-size: 18px; }
-  .rates { grid-template-columns: 1fr; } /* 1 колонка на телефонах */
+  .rates { grid-template-columns: 1fr; }
   .logo img { height: 30px; }
 }
 
