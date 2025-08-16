@@ -9,34 +9,35 @@
 </head>
 <body>
   <div class="container">
-    <!-- Логотип -->
-    <header class="logo">
-      <img src="logo.svg" alt="Simple Exchange" />
+    <!-- Верхняя строка с логотипом и временем -->
+    <header class="header">
+      <div class="logo">
+        <img src="logo.svg" alt="Simple Exchange" />
+      </div>
+      
+      <section class="time" aria-label="Мировое время">
+        <div class="time-item" id="moscow-container">
+          <div class="city">Москва</div>
+          <div class="time-value" id="moscow" aria-label="Время в Москве">--:--</div>
+        </div>
+        <div class="time-item">
+          <div class="city">Дубай</div>
+          <div class="time-value" id="dubai" aria-label="Время в Дубае">--:--</div>
+        </div>
+        <div class="time-item">
+          <div class="city">Бангкок</div>
+          <div class="time-value" id="bangkok" aria-label="Время в Бангкоке">--:--</div>
+        </div>
+        <div class="time-item">
+          <div class="city">Лондон</div>
+          <div class="time-value" id="london" aria-label="Время в Лондоне">--:--</div>
+        </div>
+        <div class="time-item">
+          <div class="city">Нью-Йорк</div>
+          <div class="time-value" id="ny" aria-label="Время в Нью-Йорке">--:--</div>
+        </div>
+      </section>
     </header>
-    
-    <!-- Время -->
-    <section class="time" aria-label="Мировое время">
-      <div class="time-item" id="moscow-container">
-        <div class="city">Москва</div>
-        <div class="time-value" id="moscow" aria-label="Время в Москве">--:--</div>
-      </div>
-      <div class="time-item">
-        <div class="city">Дубай</div>
-        <div class="time-value" id="dubai" aria-label="Время в Дубае">--:--</div>
-      </div>
-      <div class="time-item">
-        <div class="city">Бангкок</div>
-        <div class="time-value" id="bangkok" aria-label="Время в Бангкоке">--:--</div>
-      </div>
-      <div class="time-item">
-        <div class="city">Лондон</div>
-        <div class="time-value" id="london" aria-label="Время в Лондоне">--:--</div>
-      </div>
-      <div class="time-item">
-        <div class="city">Нью-Йорк</div>
-        <div class="time-value" id="ny" aria-label="Время в Нью-Йорке">--:--</div>
-      </div>
-    </section>
     
     <!-- Курсы -->
     <main class="rates" aria-label="Курсы валют и активов">
