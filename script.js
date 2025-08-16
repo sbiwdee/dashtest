@@ -53,6 +53,14 @@ const elements = {
     'usd-cbr': document.getElementById('usd-cbr'),
     'usd-mb': document.getElementById('usd-mb')
   },
+  charts: {
+    btc: document.getElementById('chart-btc'),
+    eth: document.getElementById('chart-eth'),
+    gold: document.getElementById('chart-gold'),
+    oil: document.getElementById('chart-oil'),
+    'usd-cbr': document.getElementById('chart-usd-cbr'),
+    'usd-mb': document.getElementById('chart-usd-mb')
+  },
   ticker: document.getElementById('ticker'),
   music: document.getElementById('bg-music')
 };
@@ -69,7 +77,6 @@ const state = {
     'usd-mb': null
   },
   isMusicPlaying: false,
-  charts: {},
   chartData: {
     btc: [],
     eth: [],
@@ -77,6 +84,14 @@ const state = {
     oil: [],
     'usd-cbr': [],
     'usd-mb': []
+  },
+  chartColors: {
+    btc: '#F7931A',
+    eth: '#627EEA',
+    gold: '#FFD700',
+    oil: '#333333',
+    'usd-cbr': '#1E88E5',
+    'usd-mb': '#43A047'
   }
 };
 
@@ -145,89 +160,48 @@ function updateChartData(id, value) {
   updateChart(id);
 }
 
-// Создание графика
-function createChart(id) {
-  const ctx = document.getElementById(`chart-${id}`).getContext('2d');
-  
-  state.charts[id] = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: Array(CONFIG.chartPoints).fill(''),
-      datasets: [{
-        data: [],
-        borderColor: getChartColor(id),
-        borderWidth: 3,
-        pointRadius: 0,
-        pointHoverRadius: 0,
-        fill: false,
-        tension: 0.4
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          enabled: false
-        }
-      },
-      scales: {
-        x: {
-          display: false
-        },
-        y: {
-          display: false
-        }
-      },
-      elements: {
-        line: {
-          borderJoinStyle: 'round'
-        }
-      },
-      animation: {
-        duration: 0
-      }
-    }
-  });
-}
-
-// Обновление графика
+// Обновление SVG графика
 function updateChart(id) {
-  if (!state.charts[id]) {
-    createChart(id);
+  const data = state.chartData[id] || [];
+  const pathElement = elements.charts[id];
+  
+  if (!pathElement || data.length < 2) {
+    return;
   }
   
-  const chart = state.charts[id];
-  const data = state.chartData[id] || [];
+  // Находим минимальное и максимальное значение для масштабирования
+  const values = data.map(point => point.value);
+  const minValue = Math.min(...values);
+  const maxValue = Math.max(...values);
+  const range = maxValue - minValue || 1; // Избегаем деления на ноль
   
-  // Обновляем данные графика
-  chart.data.datasets[0].data = data.map(point => point.value);
+  // Создаем путь для SVG
+  let pathData = '';
+  const width = 300;
+  const height = 100;
+  const padding = 10;
+  
+  data.forEach((point, index) => {
+    const x = (index / (data.length - 1)) * (width - 2 * padding) + padding;
+    const y = height - ((point.value - minValue) / range) * (height - 2 * padding) - padding;
+    
+    if (index === 0) {
+      pathData += `M ${x} ${y}`;
+    } else {
+      pathData += ` L ${x} ${y}`;
+    }
+  });
+  
+  // Обновляем путь
+  pathElement.setAttribute('d', pathData);
   
   // Обновляем цвет линии в зависимости от тренда
   if (data.length > 1) {
     const lastValue = data[data.length - 1].value;
     const prevValue = data[data.length - 2].value;
-    chart.data.datasets[0].borderColor = lastValue >= prevValue ? '#00C853' : '#d32f2f';
+    const color = lastValue >= prevValue ? '#00C853' : '#d32f2f';
+    pathElement.setAttribute('stroke', color);
   }
-  
-  chart.update('none'); // Обновляем без анимации для производительности
-}
-
-// Получение цвета для графика
-function getChartColor(id) {
-  const colors = {
-    btc: '#F7931A',
-    eth: '#627EEA',
-    gold: '#FFD700',
-    oil: '#333333',
-    'usd-cbr': '#1E88E5',
-    'usd-mb': '#43A047'
-  };
-  
-  return colors[id] || '#00C853';
 }
 
 // Оптимизация обновления времени
@@ -407,11 +381,6 @@ function setupAutoRefresh() {
 
 // Инициализация графиков
 function initCharts() {
-  // Создаем графики для всех валют
-  Object.keys(state.chartData).forEach(id => {
-    createChart(id);
-  });
-  
   // Запускаем симуляцию обновления графиков
   setInterval(simulateChartUpdates, CONFIG.chartUpdateInterval);
 }
