@@ -14,16 +14,13 @@ const CONFIG = {
     'usd-mb': '92,35'
   },
   chartPoints: 20, // Количество точек на графике
-  chartUpdateInterval: 60000, // Обновление графиков каждую минуту
-  historyDays: 7 // Сколько дней истории загружать для графиков
+  chartUpdateInterval: 30000 // Обновление графиков каждые 30 секунд
 };
 
 // API URLs
 const API_URLS = {
   crypto: 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd',
-  cryptoHistory: 'https://api.coingecko.com/api/v3/coins/{id}/market_chart?vs_currency=usd&days={days}',
   gold: 'https://api.gold-api.com/price/XAU',
-  goldHistory: 'https://api.gold-api.com/rates/XAU/{days}',
   oil: 'https://www.alphavantage.co/query?function=WTI&interval=weekly&apikey=GAJYW71E8KK0I7CL',
   usdRub: 'https://www.cbr-xml-daily.ru/daily_json.js'
 };
@@ -95,8 +92,7 @@ const state = {
     oil: '#333333',
     'usd-cbr': '#1E88E5',
     'usd-mb': '#43A047'
-  },
-  lastHistoryUpdate: 0
+  }
 };
 
 // Улучшенная функция fetch с повторными попытками
@@ -149,7 +145,7 @@ function updateChartData(id, value) {
     state.chartData[id] = [];
   }
   
-  // Добавляем новое значение с текущей временной меткой
+  // Добавляем новое значение
   state.chartData[id].push({
     time: new Date(),
     value: value
@@ -206,86 +202,6 @@ function updateChart(id) {
     const color = lastValue >= prevValue ? '#00C853' : '#d32f2f';
     pathElement.setAttribute('stroke', color);
   }
-}
-
-// Загрузка исторических данных для графиков
-async function loadHistoricalData() {
-  try {
-    // Загрузка исторических данных для криптовалют
-    const btcHistory = await fetchWithRetry(
-      API_URLS.cryptoHistory.replace('{id}', 'bitcoin').replace('{days}', CONFIG.historyDays)
-    );
-    
-    const ethHistory = await fetchWithRetry(
-      API_URLS.cryptoHistory.replace('{id}', 'ethereum').replace('{days}', CONFIG.historyDays)
-    );
-    
-    // Обработка данных Bitcoin
-    if (btcHistory.prices) {
-      state.chartData.btc = btcHistory.prices.slice(-CONFIG.chartPoints).map(point => ({
-        time: new Date(point[0]),
-        value: point[1]
-      }));
-      updateChart('btc');
-    }
-    
-    // Обработка данных Ethereum
-    if (ethHistory.prices) {
-      state.chartData.eth = ethHistory.prices.slice(-CONFIG.chartPoints).map(point => ({
-        time: new Date(point[0]),
-        value: point[1]
-      }));
-      updateChart('eth');
-    }
-    
-    // Для золота и нефти используем текущие значения с симуляцией истории
-    // В реальном приложении здесь были бы запросы к API с историческими данными
-    
-    console.log("Исторические данные загружены");
-    state.lastHistoryUpdate = Date.now();
-    
-  } catch (error) {
-    handleError(error, 'загрузке исторических данных');
-    
-    // Если не удалось загрузить историю, используем текущие значения
-    Object.keys(CONFIG.fallbackValues).forEach(id => {
-      const numericValue = parseFloat(CONFIG.fallbackValues[id].replace(/,/g, '').replace(/\./g, ''));
-      
-      // Создаем начальные данные (все точки с одинаковым значением)
-      state.chartData[id] = [];
-      for (let i = 0; i < CONFIG.chartPoints; i++) {
-        state.chartData[id].push({
-          time: new Date(Date.now() - (CONFIG.chartPoints - i) * 60000),
-          value: numericValue
-        });
-      }
-      
-      updateChart(id);
-    });
-  }
-}
-
-// Обновление графиков на основе реальных изменений
-function updateChartsWithRealData() {
-  // Для криптовалют мы уже получаем актуальные данные
-  // Для остальных активов добавляем небольшие случайные изменения для демонстрации
-  
-  Object.keys(state.chartData).forEach(id => {
-    if (state.chartData[id].length > 0) {
-      const lastValue = state.chartData[id][state.chartData[id].length - 1].value;
-      
-      // Для криптовалют используем реальные данные из API
-      // Для остальных симулируем небольшие изменения
-      if (id === 'btc' || id === 'eth') {
-        // Данные уже обновлены через updateValue
-      } else {
-        // Генерируем небольшое изменение в пределах ±0.5%
-        const change = (Math.random() - 0.5) * 0.01;
-        const newValue = lastValue * (1 + change);
-        updateChartData(id, newValue);
-      }
-    }
-  });
 }
 
 // Оптимизация обновления времени
@@ -388,6 +304,19 @@ async function fetchAllRates() {
   }
 }
 
+// Симуляция обновления графиков (для демонстрации)
+function simulateChartUpdates() {
+  Object.keys(state.chartData).forEach(id => {
+    if (state.chartData[id].length > 0) {
+      const lastValue = state.chartData[id][state.chartData[id].length - 1].value;
+      // Генерируем случайное изменение в пределах ±1%
+      const change = (Math.random() - 0.5) * 0.02;
+      const newValue = lastValue * (1 + change);
+      updateChartData(id, newValue);
+    }
+  });
+}
+
 // Плавное обновление бегущей строки
 function updateTicker() {
   const ticker = elements.ticker;
@@ -450,24 +379,37 @@ function setupAutoRefresh() {
   }, refreshInterval);
 }
 
-// Инициализация графиков
-async function initCharts() {
-  // Загружаем исторические данные при запуске
-  await loadHistoricalData();
+// Инициализация графиков с начальными данными
+function initCharts() {
+  // Заполняем графики начальными данными
+  Object.keys(CONFIG.fallbackValues).forEach(id => {
+    const numericValue = parseFloat(CONFIG.fallbackValues[id].replace(/,/g, '').replace(/\./g, ''));
+    
+    // Создаем начальные данные (все точки с одинаковым значением)
+    for (let i = 0; i < CONFIG.chartPoints; i++) {
+      state.chartData[id].push({
+        time: new Date(Date.now() - (CONFIG.chartPoints - i) * 60000), // Каждая точка с интервалом в минуту
+        value: numericValue
+      });
+    }
+    
+    // Сразу отрисовываем график
+    updateChart(id);
+  });
   
-  // Запускаем обновление графиков с реальными данными
-  setInterval(updateChartsWithRealData, CONFIG.chartUpdateInterval);
+  // Запускаем симуляцию обновления графиков
+  setInterval(simulateChartUpdates, CONFIG.chartUpdateInterval);
 }
 
 // Инициализация приложения
-async function initApp() {
+function initApp() {
   // Сразу отображаем значения по умолчанию
   Object.entries(CONFIG.fallbackValues).forEach(([key, value]) => {
     elements.rates[key].textContent = value;
   });
   
-  // Инициализируем графики с историческими данными
-  await initCharts();
+  // Инициализируем графики с начальными данными
+  initCharts();
   
   // Запуск обновлений
   fetchAllRates();
