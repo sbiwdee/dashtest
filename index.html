@@ -39,42 +39,54 @@
         <div class="coin">BTC/USDT</div>
         <div class="value" id="btc" aria-live="polite">--</div>
         <div class="chart-container">
-          <canvas id="chart-btc"></canvas>
+          <svg class="chart" viewBox="0 0 300 100" preserveAspectRatio="none">
+            <path id="chart-btc" fill="none" stroke="#F7931A" stroke-width="3" />
+          </svg>
         </div>
       </div>
       <div class="rate-card">
         <div class="coin">ETH/USDT</div>
         <div class="value" id="eth" aria-live="polite">--</div>
         <div class="chart-container">
-          <canvas id="chart-eth"></canvas>
+          <svg class="chart" viewBox="0 0 300 100" preserveAspectRatio="none">
+            <path id="chart-eth" fill="none" stroke="#627EEA" stroke-width="3" />
+          </svg>
         </div>
       </div>
       <div class="rate-card">
         <div class="coin">Золото</div>
         <div class="value" id="gold" aria-live="polite">--</div>
         <div class="chart-container">
-          <canvas id="chart-gold"></canvas>
+          <svg class="chart" viewBox="0 0 300 100" preserveAspectRatio="none">
+            <path id="chart-gold" fill="none" stroke="#FFD700" stroke-width="3" />
+          </svg>
         </div>
       </div>
       <div class="rate-card">
         <div class="coin">Нефть</div>
         <div class="value" id="oil" aria-live="polite">--</div>
         <div class="chart-container">
-          <canvas id="chart-oil"></canvas>
+          <svg class="chart" viewBox="0 0 300 100" preserveAspectRatio="none">
+            <path id="chart-oil" fill="none" stroke="#333333" stroke-width="3" />
+          </svg>
         </div>
       </div>
       <div class="rate-card">
         <div class="coin">USD/RUB ЦБ</div>
         <div class="value" id="usd-cbr" aria-live="polite">--</div>
         <div class="chart-container">
-          <canvas id="chart-usd-cbr"></canvas>
+          <svg class="chart" viewBox="0 0 300 100" preserveAspectRatio="none">
+            <path id="chart-usd-cbr" fill="none" stroke="#1E88E5" stroke-width="3" />
+          </svg>
         </div>
       </div>
       <div class="rate-card">
         <div class="coin">USD/RUB Межбанк</div>
         <div class="value" id="usd-mb" aria-live="polite">--</div>
         <div class="chart-container">
-          <canvas id="chart-usd-mb"></canvas>
+          <svg class="chart" viewBox="0 0 300 100" preserveAspectRatio="none">
+            <path id="chart-usd-mb" fill="none" stroke="#43A047" stroke-width="3" />
+          </svg>
         </div>
       </div>
     </main>
@@ -91,8 +103,6 @@
     Ваш браузер не поддерживает аудио элемент.
   </audio>
   
-  <!-- Подключаем Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
