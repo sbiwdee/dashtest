@@ -1,6 +1,6 @@
 // Конфигурация приложения
 const CONFIG = {
-  updateInterval: 100000, // 5 минут
+  updateInterval: 300000, // 5 минут
   tickerUpdateInterval: 8000, // 8 секунд
   timeUpdateInterval: 1000, // 1 секунда
   retryAttempts: 3,
@@ -14,7 +14,7 @@ const CONFIG = {
     'usd-mb': '92.35'
   },
   chartPoints: 20, // Количество точек на графике
-  chartUpdateInterval: 60000 // Обновление графиков каждую минуту
+  chartUpdateInterval: 30000 // Обновление графиков каждые 30 секунд
 };
 
 // API URLs
@@ -379,15 +379,36 @@ function setupAutoRefresh() {
   }, refreshInterval);
 }
 
-// Инициализация графиков
+// Инициализация графиков с начальными данными
 function initCharts() {
+  // Заполняем графики начальными данными
+  Object.keys(CONFIG.fallbackValues).forEach(id => {
+    const numericValue = parseFloat(CONFIG.fallbackValues[id].replace(/,/g, ''));
+    
+    // Создаем начальные данные (все точки с одинаковым значением)
+    for (let i = 0; i < CONFIG.chartPoints; i++) {
+      state.chartData[id].push({
+        time: new Date(Date.now() - (CONFIG.chartPoints - i) * 60000), // Каждая точка с интервалом в минуту
+        value: numericValue
+      });
+    }
+    
+    // Сразу отрисовываем график
+    updateChart(id);
+  });
+  
   // Запускаем симуляцию обновления графиков
   setInterval(simulateChartUpdates, CONFIG.chartUpdateInterval);
 }
 
 // Инициализация приложения
 function initApp() {
-  // Инициализируем графики
+  // Сразу отображаем значения по умолчанию
+  Object.entries(CONFIG.fallbackValues).forEach(([key, value]) => {
+    elements.rates[key].textContent = value;
+  });
+  
+  // Инициализируем графики с начальными данными
   initCharts();
   
   // Запуск обновлений
