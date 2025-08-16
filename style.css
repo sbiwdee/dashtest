@@ -12,7 +12,7 @@
   --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   --card-height: 320px;
   --chart-height: 100px;
-  --time-item-width: 220px; /* Увеличена ширина ячеек времени */
+  --time-item-width: 220px;
   --time-item-height: 100px;
   --gap-size: 20px; /* Единый размер отступов */
 }
@@ -55,7 +55,7 @@ body {
   box-shadow: var(--shadow);
   height: var(--time-item-height);
   flex-shrink: 0;
-  margin-left: var(--gap-size); /* Добавляем отступ слева для выделения */
+  margin-left: var(--gap-size);
 }
 
 .logo img {
@@ -71,7 +71,9 @@ body {
   padding-bottom: 5px;
   flex-grow: 1;
   min-width: 0;
-  justify-content: flex-start; /* Выравниваем по левому краю */
+  justify-content: flex-start;
+  /* Ограничиваем максимальную ширину, чтобы убрать пустое место справа */
+  max-width: calc(5 * var(--time-item-width) + 4 * var(--gap-size));
 }
 
 .time::-webkit-scrollbar {
@@ -138,6 +140,8 @@ body {
   gap: var(--gap-size);
   width: 100%;
   margin: 0 auto;
+  /* Убедимся, что нет дополнительных отступов */
+  padding: 0;
 }
 
 .rate-card {
@@ -151,6 +155,8 @@ body {
   flex-direction: column;
   justify-content: space-between;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  /* Убираем возможные margin */
+  margin: 0;
 }
 
 .rate-card:hover {
@@ -205,6 +211,8 @@ body {
   height: 70px;
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
   width: 100%;
+  /* Убираем возможные margin */
+  margin: 0;
 }
 
 .ticker {
@@ -283,7 +291,10 @@ body {
   .container { padding: var(--gap-size); }
   .header { flex-direction: column; align-items: stretch; }
   .logo { margin-left: 0; margin-bottom: var(--gap-size); width: 100%; }
-  .time { justify-content: center; }
+  .time { 
+    justify-content: center; 
+    max-width: none; /* На мобильных убираем ограничение ширины */
+  }
   .city { font-size: 14px; }
   .time-value { font-size: 18px; }
   .coin { font-size: 20px; }
