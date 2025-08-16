@@ -28,8 +28,8 @@ body {
 }
 
 .container {
-  display: grid;
-  grid-template-rows: auto auto 1fr auto;
+  display: flex;
+  flex-direction: column;
   height: 100vh;
   padding: var(--gap-size);
   gap: var(--gap-size);
@@ -56,7 +56,7 @@ body {
   box-shadow: var(--shadow);
   height: var(--time-item-height);
   flex-shrink: 0;
-  margin-left: var(--logo-margin); /* Увеличиваем отступ слева */
+  margin-left: var(--logo-margin);
 }
 
 .logo img {
@@ -139,11 +139,9 @@ body {
   grid-auto-rows: var(--card-height);
   gap: var(--gap-size);
   width: 100%;
-  max-width: 1200px; /* Ограничиваем максимальную ширину для лучшей центрировки */
-  margin: 0 auto;
   padding: 0;
-  justify-self: center; /* Центрируем по горизонтали */
-  align-self: center; /* Центрируем по вертикали */
+  margin: 0;
+  flex-grow: 1; /* Занимаем все доступное пространство */
 }
 
 .rate-card {
@@ -157,7 +155,7 @@ body {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   padding: 0;
   margin: 0;
-  overflow: hidden; /* Убираем возможное переполнение */
+  overflow: hidden;
 }
 
 .rate-card:hover {
@@ -184,7 +182,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 60px; /* Минимальная высота для выравнивания */
+  min-height: 60px;
 }
 
 /* Контейнер для графика */
@@ -194,7 +192,7 @@ body {
   overflow: hidden;
   position: relative;
   padding: 10px 20px 20px;
-  flex-grow: 1; /* График занимает оставшееся пространство */
+  flex-grow: 1;
 }
 
 .chart {
@@ -213,6 +211,7 @@ body {
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
   width: 100%;
   margin: 0;
+  flex-shrink: 0; /* Запрещаем сжиматься в полноэкранном режиме */
 }
 
 .ticker {
@@ -302,10 +301,7 @@ body {
   .value { font-size: 32px; }
   .ticker-container { height: 60px; }
   .ticker { font-size: 20px; }
-  .rates { 
-    grid-template-columns: repeat(2, 1fr);
-    max-width: 600px;
-  }
+  .rates { grid-template-columns: repeat(2, 1fr); }
   .logo img { height: 35px; }
 }
 
@@ -325,10 +321,7 @@ body {
   .value { font-size: 28px; }
   .ticker-container { height: 50px; }
   .ticker { font-size: 18px; }
-  .rates { 
-    grid-template-columns: 1fr;
-    max-width: 300px;
-  }
+  .rates { grid-template-columns: 1fr; }
   .logo img { height: 30px; }
 }
 
