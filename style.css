@@ -10,8 +10,8 @@
   --accent: #00C853;
   --card-bg: #1e1e1e;
   --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  --card-height: 320px; /* Фиксированная высота карточки */
-  --chart-height: 100px; /* Фиксированная высота графика */
+  --card-height: 320px;
+  --chart-height: 100px;
 }
 
 body {
@@ -40,26 +40,46 @@ body {
 /* Время */
 .time {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   font-size: 42px;
   font-weight: 500;
-  flex-wrap: wrap;
 }
 
 .time-item {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   padding: 18px 24px;
   background: var(--card-bg);
   border-radius: 12px;
   min-width: 180px;
   box-shadow: var(--shadow);
+  flex: 1;
+  text-align: center;
+}
+
+.city {
+  font-size: 24px;
+  font-weight: 500;
+  color: #aaa;
+  margin-bottom: 5px;
+}
+
+.time-value {
+  font-size: 36px;
+  font-weight: 700;
 }
 
 #moscow-container {
   background: var(--accent) !important;
   color: white !important;
-  font-weight: 700;
   box-shadow: 0 0 15px rgba(0, 200, 83, 0.4);
+}
+
+#moscow-container .city,
+#moscow-container .time-value {
+  color: white !important;
 }
 
 /* Курсы */
@@ -76,7 +96,6 @@ body {
   border-radius: 16px;
   text-align: center;
   box-shadow: var(--shadow);
-  /* Фиксированная высота и flex-контейнер */
   height: var(--card-height);
   display: flex;
   flex-direction: column;
@@ -90,7 +109,6 @@ body {
   margin-bottom: 10px;
   text-transform: uppercase;
   letter-spacing: 1px;
-  /* Фиксированная высота для стабильности */
   height: 40px;
   display: flex;
   align-items: center;
@@ -102,7 +120,6 @@ body {
   font-weight: bold;
   color: var(--text);
   margin-bottom: 15px;
-  /* Фиксированная высота для стабильности */
   height: 70px;
   display: flex;
   align-items: center;
@@ -156,6 +173,8 @@ body {
   .coin { font-size: 28px; }
   .ticker { font-size: 30px; }
   .time { font-size: 36px; }
+  .city { font-size: 20px; }
+  .time-value { font-size: 30px; }
 }
 
 @media (min-width: 1920px) {
@@ -166,6 +185,8 @@ body {
   .value { font-size: 64px; }
   .coin { font-size: 36px; }
   .time { font-size: 48px; }
+  .city { font-size: 24px; }
+  .time-value { font-size: 40px; }
   .ticker { font-size: 42px; }
 }
 
@@ -215,5 +236,13 @@ body {
   .ticker-container {
     height: 60px;
     font-size: 28px;
+  }
+  
+  .city {
+    font-size: 18px;
+  }
+  
+  .time-value {
+    font-size: 24px;
   }
 }
