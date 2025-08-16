@@ -11,12 +11,12 @@
   --card-bg: #1e1e1e;
   --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   --card-height: 320px;
-  --chart-height: 100px;
+  --chart-height: 80px; /* Уменьшаем высоту графика */
   --time-item-width: 220px;
   --time-item-height: 100px;
-  --gap-size: 20px; /* Единый размер отступов */
-  --logo-margin: 30px; /* Дополнительный отступ для логотипа */
-  --header-gap: 155px; /* Отступ между лого и временем */
+  --gap-size: 20px;
+  --logo-margin: 30px;
+  --header-gap: 155px;
 }
 
 body {
@@ -43,7 +43,7 @@ body {
   display: flex;
   align-items: center;
   width: 100%;
-  gap: var(--header-gap); /* Увеличенный отступ между лого и временем */
+  gap: var(--header-gap);
 }
 
 /* Логотип */
@@ -142,7 +142,7 @@ body {
   width: 100%;
   padding: 0;
   margin: 0;
-  flex-grow: 1; /* Занимаем все доступное пространство */
+  flex-grow: 1;
 }
 
 .rate-card {
@@ -165,25 +165,26 @@ body {
 }
 
 .coin {
-  font-size: 28px;
-  font-weight: 600;
-  color: #ccc;
+  font-size: 24px; /* Уменьшаем размер названия валюты */
+  font-weight: 500; /* Уменьшаем жирность */
+  color: #888; /* Делаем менее ярким */
   text-transform: uppercase;
   letter-spacing: 1px;
-  padding: 20px 20px 10px;
+  padding: 20px 20px 5px; /* Уменьшаем отступ снизу */
   text-align: center;
 }
 
 .value {
-  font-size: 48px;
-  font-weight: bold;
+  font-size: 56px; /* Увеличиваем размер цены */
+  font-weight: 700; /* Увеличиваем жирность */
   color: var(--text);
   padding: 0 20px;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 60px;
+  min-height: 80px; /* Увеличиваем минимальную высоту для цены */
+  margin-bottom: 10px; /* Добавляем отступ под ценой */
 }
 
 /* Контейнер для графика */
@@ -192,8 +193,14 @@ body {
   height: var(--chart-height);
   overflow: hidden;
   position: relative;
-  padding: 10px 20px 20px;
-  flex-grow: 1;
+  padding: 0 20px 15px; /* Уменьшаем отступы */
+  flex-grow: 0; /* График не растет, а занимает фиксированное пространство */
+  opacity: 0.7; /* Делаем график менее заметным */
+  transition: opacity 0.3s ease; /* Плавное изменение прозрачности при наведении */
+}
+
+.rate-card:hover .chart-container {
+  opacity: 1; /* При наведении график становится полностью видимым */
 }
 
 .chart {
@@ -212,7 +219,7 @@ body {
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
   width: 100%;
   margin: 0;
-  flex-shrink: 0; /* Запрещаем сжиматься в полноэкранном режиме */
+  flex-shrink: 0;
 }
 
 .ticker {
@@ -234,15 +241,15 @@ body {
     --time-item-width: 200px;
     --time-item-height: 90px;
     --card-height: 300px;
-    --chart-height: 90px;
+    --chart-height: 70px;
     --gap-size: 18px;
     --logo-margin: 25px;
     --header-gap: 35px;
   }
   .city { font-size: 20px; }
   .time-value { font-size: 28px; }
-  .coin { font-size: 26px; }
-  .value { font-size: 44px; }
+  .coin { font-size: 22px; }
+  .value { font-size: 50px; }
   .ticker { font-size: 28px; }
   .logo img { height: 50px; }
 }
@@ -252,7 +259,7 @@ body {
     --time-item-width: 180px;
     --time-item-height: 80px;
     --card-height: 280px;
-    --chart-height: 80px;
+    --chart-height: 65px;
     --gap-size: 16px;
     --logo-margin: 20px;
     --header-gap: 30px;
@@ -260,8 +267,8 @@ body {
   .container { padding: var(--gap-size); }
   .city { font-size: 18px; }
   .time-value { font-size: 24px; }
-  .coin { font-size: 24px; }
-  .value { font-size: 40px; }
+  .coin { font-size: 20px; }
+  .value { font-size: 46px; }
   .ticker { font-size: 26px; }
   .rates { grid-template-columns: repeat(3, 1fr); }
   .logo img { height: 45px; }
@@ -272,15 +279,15 @@ body {
     --time-item-width: 160px;
     --time-item-height: 70px;
     --card-height: 260px;
-    --chart-height: 70px;
+    --chart-height: 60px;
     --gap-size: 14px;
     --logo-margin: 15px;
     --header-gap: 25px;
   }
   .city { font-size: 16px; }
   .time-value { font-size: 20px; }
-  .coin { font-size: 22px; }
-  .value { font-size: 36px; }
+  .coin { font-size: 18px; }
+  .value { font-size: 42px; }
   .ticker { font-size: 24px; }
   .rates { grid-template-columns: repeat(3, 1fr); }
   .logo img { height: 40px; }
@@ -291,7 +298,7 @@ body {
     --time-item-width: 140px;
     --time-item-height: 60px;
     --card-height: 240px;
-    --chart-height: 60px;
+    --chart-height: 55px;
     --gap-size: 12px;
     --logo-margin: 10px;
     --header-gap: 20px;
@@ -302,8 +309,8 @@ body {
   .time { justify-content: center; flex-wrap: wrap; }
   .city { font-size: 14px; }
   .time-value { font-size: 18px; }
-  .coin { font-size: 20px; }
-  .value { font-size: 32px; }
+  .coin { font-size: 16px; }
+  .value { font-size: 38px; }
   .ticker-container { height: 60px; }
   .ticker { font-size: 20px; }
   .rates { grid-template-columns: repeat(2, 1fr); }
@@ -323,8 +330,8 @@ body {
   .container { padding: var(--gap-size); }
   .city { font-size: 12px; }
   .time-value { font-size: 16px; }
-  .coin { font-size: 18px; }
-  .value { font-size: 28px; }
+  .coin { font-size: 14px; }
+  .value { font-size: 34px; }
   .ticker-container { height: 50px; }
   .ticker { font-size: 18px; }
   .rates { grid-template-columns: 1fr; }
@@ -335,19 +342,19 @@ body {
 @media (min-width: 1600px) {
   :root {
     --card-height: 380px;
-    --chart-height: 120px;
+    --chart-height: 90px;
   }
-  .coin { font-size: 32px; }
-  .value { font-size: 56px; }
+  .coin { font-size: 26px; }
+  .value { font-size: 64px; }
 }
 
 @media (min-width: 1920px) {
   :root {
     --card-height: 420px;
-    --chart-height: 140px;
+    --chart-height: 100px;
   }
-  .coin { font-size: 36px; }
-  .value { font-size: 64px; }
+  .coin { font-size: 28px; }
+  .value { font-size: 72px; }
 }
 
 /* Оптимизация для пользователей с ограниченными возможностями */
