@@ -16,6 +16,7 @@
   --time-item-height: 100px;
   --gap-size: 20px; /* Единый размер отступов */
   --logo-margin: 30px; /* Дополнительный отступ для логотипа */
+  --header-gap: 40px; /* Отступ между лого и временем */
 }
 
 body {
@@ -42,7 +43,7 @@ body {
   display: flex;
   align-items: center;
   width: 100%;
-  gap: var(--gap-size);
+  gap: var(--header-gap); /* Увеличенный отступ между лого и временем */
 }
 
 /* Логотип */
@@ -236,6 +237,7 @@ body {
     --chart-height: 90px;
     --gap-size: 18px;
     --logo-margin: 25px;
+    --header-gap: 35px;
   }
   .city { font-size: 20px; }
   .time-value { font-size: 28px; }
@@ -253,6 +255,7 @@ body {
     --chart-height: 80px;
     --gap-size: 16px;
     --logo-margin: 20px;
+    --header-gap: 30px;
   }
   .container { padding: var(--gap-size); }
   .city { font-size: 18px; }
@@ -272,6 +275,7 @@ body {
     --chart-height: 70px;
     --gap-size: 14px;
     --logo-margin: 15px;
+    --header-gap: 25px;
   }
   .city { font-size: 16px; }
   .time-value { font-size: 20px; }
@@ -290,10 +294,11 @@ body {
     --chart-height: 60px;
     --gap-size: 12px;
     --logo-margin: 10px;
+    --header-gap: 20px;
   }
   .container { padding: var(--gap-size); }
   .header { flex-direction: column; align-items: stretch; }
-  .logo { margin-left: 20; margin-bottom: var(--gap-size); width: 100%; }
+  .logo { margin-left: 0; margin-bottom: var(--gap-size); width: 100%; }
   .time { justify-content: center; flex-wrap: wrap; }
   .city { font-size: 14px; }
   .time-value { font-size: 18px; }
@@ -313,6 +318,7 @@ body {
     --chart-height: 50px;
     --gap-size: 10px;
     --logo-margin: 5px;
+    --header-gap: 15px;
   }
   .container { padding: var(--gap-size); }
   .city { font-size: 12px; }
@@ -323,6 +329,25 @@ body {
   .ticker { font-size: 18px; }
   .rates { grid-template-columns: 1fr; }
   .logo img { height: 30px; }
+}
+
+/* Для больших экранов и полноэкранного режима */
+@media (min-width: 1600px) {
+  :root {
+    --card-height: 380px;
+    --chart-height: 120px;
+  }
+  .coin { font-size: 32px; }
+  .value { font-size: 56px; }
+}
+
+@media (min-width: 1920px) {
+  :root {
+    --card-height: 420px;
+    --chart-height: 140px;
+  }
+  .coin { font-size: 36px; }
+  .value { font-size: 64px; }
 }
 
 /* Оптимизация для пользователей с ограниченными возможностями */
