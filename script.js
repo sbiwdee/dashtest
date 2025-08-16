@@ -9,9 +9,9 @@ const CONFIG = {
     btc: '67,500',
     eth: '3,450',
     gold: '2,340.00',
-    oil: '87.50',
-    'usd-cbr': '92.10',
-    'usd-mb': '92.35'
+    oil: '87,50',
+    'usd-cbr': '92,10',
+    'usd-mb': '92,35'
   },
   chartPoints: 20, // Количество точек на графике
   chartUpdateInterval: 30000 // Обновление графиков каждые 30 секунд
@@ -117,7 +117,7 @@ function handleError(error, context) {
 
 // Форматирование чисел
 function formatNumber(num) {
-  return new Intl.NumberFormat('en-US').format(num);
+  return new Intl.NumberFormat('ru-RU').format(num);
 }
 
 // Функция обновления значения
@@ -135,7 +135,7 @@ function updateValue(id, newValue) {
   state.prevValues[id] = newValue;
   
   // Обновляем данные для графика
-  const numericValue = parseFloat(newValue.replace(/,/g, ''));
+  const numericValue = parseFloat(newValue.replace(/,/g, '').replace(/\./g, ''));
   updateChartData(id, numericValue);
 }
 
@@ -383,7 +383,7 @@ function setupAutoRefresh() {
 function initCharts() {
   // Заполняем графики начальными данными
   Object.keys(CONFIG.fallbackValues).forEach(id => {
-    const numericValue = parseFloat(CONFIG.fallbackValues[id].replace(/,/g, ''));
+    const numericValue = parseFloat(CONFIG.fallbackValues[id].replace(/,/g, '').replace(/\./g, ''));
     
     // Создаем начальные данные (все точки с одинаковым значением)
     for (let i = 0; i < CONFIG.chartPoints; i++) {
